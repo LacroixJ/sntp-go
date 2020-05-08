@@ -85,9 +85,9 @@ func calc_ping_offset() [2]time.Duration {
 
     es_offset := (t[2].Sub(t[3]) - (t[0].Sub(t[1]))) / 2.0
 
-    offset_seconds := es_offset
+    offset := es_offset
 
-    answers := [2]time.Duration{pingtime, offset_seconds}
+    answers := [2]time.Duration{pingtime, offset}
     return answers
 
 }
