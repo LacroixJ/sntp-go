@@ -1,0 +1,30 @@
+Retrieving and analysing the average clock dift rate for a non-time syncronized machine.
+
+
+I wrote an sntp client in go to calculate the average drift rate for a machien and the analyzed the results with python. 
+
+The test machine was a raspberry pi 3b, on wifi, with an inadiquate power supply. The ntp client was disabled during the tests. 
+
+
+
+
+The average return trip time was 94.51ms, a fairly long time, when other devices on the network could get an rtt of about 60ms to the same server. This can probably be attributed to the combination of wifi and a poor power supply causing throttling. 
+
+
+
+
+Calculating the average clock drift rate was done by taking the average drifference between a clock drift, and the clock drift of the previous iteration, and then dividing the total result by 10 because we took one mesurment every 10 seconds. 
+
+The average clock drift rate was found to be 2.28 microseconds per second. That is, for every second, the rasberry pis clock would increase by 1 second + 2.28 microseconds. 
+
+By the end of the 12 hour test, the internal clock had drifted roughly 20ms in total from its starting state. 
+This number seems to be very low, but it makes sense when thinking about what kind of machine the test was being run on. 
+
+The rasberry pi is often used for embeded systems and small projects where it won't have access to an ntp server. To account for this, the hardware most likely has a better internal clock than most other motherboards would. 
+
+
+
+
+The failure rate, or the packet loss rate was 0.14% with a timeout of 1 second. Normally the timeout for an application to recieve a transmission back from an NTP server would be much longer, on the order of 30 seconds to a minute. However in this case I was a bit harsher because I have very good internet, and uptime is essential for ntp servers, meaning that I may have not seen a single packet drop during my 12 hour test with a longer timeout. 
+
+This does mean that any hicups in the network that caused the rtt to go over 1 second would show as a 'lost packet'. I was more concerned with getting a mesurment at all over such a short interval. 1 second is over 10 times the average rtt so it would be unlikely to see many of these false positives. 
